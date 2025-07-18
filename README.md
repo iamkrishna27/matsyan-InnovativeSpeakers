@@ -110,9 +110,10 @@ npm start
 
 ## 📸 Visual Showcase
 
-<img width="<img width="1659" height="921" alt="Screenshot 2025-07-18 101808" src="https://github.com/user-attachments/assets/580cd15d-02db-4921-8caa-8853854beb45" />
+<img width="
 1655" height="931" alt="Screenshot 2025-07-18 101657" src="https://github.com/user-attachments/assets/22c67294-cb3a-4311-a319-32efa3773400" />
 
+<img width="1659" height="921" alt="Screenshot 2025-07-18 101808" src="https://github.com/user-attachments/assets/580cd15d-02db-4921-8caa-8853854beb45" />
 
 ## 🎥 Demo Video  
 
