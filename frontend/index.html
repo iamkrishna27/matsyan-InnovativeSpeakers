@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartNavFish</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
+      color: #f0f8ff;
+    }
+
+    .navbar {
+      background: #003f7f;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin-left: 25px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .navbar a:hover {
+      color: #cceeff;
+    }
+
+    #map {
+      height: 75vh;
+      width: 100%;
+      border-bottom: 5px solid #0077ff;
+    }
+
+    .dashboard-info {
+      text-align: center;
+      margin: 30px auto;
+      padding: 20px;
+      max-width: 600px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      backdrop-filter: blur(4px);
+    }
+
+    .dashboard-info h2 {
+      font-size: 2.2rem;
+      color: #ffffff;
+    }
+
+    .dashboard-info p {
+      font-size: 1.1rem;
+      color: #a0c4ff;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      padding: 40px 20px;
+    }
+
+    .nav-button {
+      background: linear-gradient(135deg, #2196f3, #1e88e5);
+      color: white;
+      border: none;
+      padding: 18px 32px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 220px;
+      text-align: center;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-5px) scale(1.03);
+      background: linear-gradient(135deg, #0d47a1, #1565c0);
+    }
+
+    .nav-button i {
+      font-size: 1.4rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #001f3f;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #a0c4ff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .navbar h1 {
+        font-size: 1.4rem;
+      }
+      .nav-button {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1><i class="fa-solid fa-fish"></i> SmartNavFish</h1>
+    <div>
+      <a href="index.html"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+      <a href="sos.html"><i class="fa-solid fa-bell"></i> Emergency</a>
+      <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Dashboard Info -->
+  <div class="dashboard-info">
+    <h2>Welcome to SmartNavFish</h2>
+    <p>Explore AI-powered marine tools for safe and smart fishing</p>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="button-container">
+    <button class="nav-button" onclick="window.location.href='predict.html'">
+      <i class="fa-solid fa-crosshairs"></i> Fish Predictions
+    </button>
+    <button class="nav-button" onclick="window.location.href='weather.html'">
+      <i class="fa-solid fa-cloud-sun"></i> Weather Forecast
+    </button>
+    <button class="nav-button" onclick="window.location.href='route.html'">
+      <i class="fa-solid fa-route"></i> Route Planner
+    </button>
+    <button class="nav-button" onclick="window.location.href='sos.html'">
+      <i class="fa-solid fa-triangle-exclamation"></i> Emergency SOS
+    </button>
+    <button class="nav-button" onclick="alert('Navigation started')">
+      <i class="fa-solid fa-map-location-dot"></i> Start Navigation
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; SmartNavFish | <a href="#">About Us</a> | <a href="#">Help</a> | <a href="#">Contact</a></p>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+  <!-- Updated JS Logic -->
+  <script>
+    const map = L.map('map').setView([9.5, 77], 7);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; SmartNavFish'
+    }).addTo(map);
+
+    let userMarker;
+    navigator.geolocation.getCurrentPosition(pos => {
+      const { latitude, longitude } = pos.coords;
+      userMarker = L.marker([latitude, longitude]).addTo(map).bindPopup("Your Location");
+      map.setView([latitude, longitude], 12);
+    }, () => {
+      console.warn("Geolocation not available");
+    });
+
+    async function loadFishingZones() {
+      try {
+        const response = await fetch('http://localhost:5000/api/fishing/zones');
+        const zones = await response.json();
+
+        zones.forEach(zone => {
+          const coords = zone.coordinates.map(coord => [coord[0], coord[1]]);
+          const fishDensity = zone.fishDensity || {};
+          const densityValues = Object.values(fishDensity);
+          const avgDensity = densityValues.length ? densityValues.reduce((a, b) => a + b, 0) / densityValues.length : 0.1;
+
+          L.polygon(coords, { color: 'aqua' })
+            .addTo(map)
+            .bindPopup(`<b>${zone.name}</b><br>Density: ${avgDensity.toFixed(2)}<br>${zone.restrictions.join(', ')}`);
+
+          // Add to heat map data
+          coords.forEach(([lat, lng]) => {
+            heatData.push([lat, lng, avgDensity]);
+          });
+        });
+
+        const heatLayer = L.heatLayer(heatData, {
+          radius: 25,
+          blur: 15,
+          gradient: {
+            0.2: 'blue',
+            0.4: 'lime',
+            0.6: 'orange',
+            0.8: 'red'
+          }
+        });
+
+        heatLayer.addTo(map);
+
+      } catch (err) {
+        console.error("Error loading fishing zones:", err);
+      }
+    }
+
+    const heatData = [];
+    loadFishingZones();
+  </script>
+</body>
+</html>

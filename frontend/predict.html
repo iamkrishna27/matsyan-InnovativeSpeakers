@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmartNavFish - Fish Prediction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f0f9ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 90%;
+      text-align: center;
+    }
+
+    h2 {
+      font-weight: 600;
+      color: #0077b6;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: #0077b6;
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #023e8a;
+    }
+
+    ul {
+      margin-top: 20px;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      background: #e0f2ff;
+      margin: 15px 0;
+      padding: 18px 22px;
+      border-radius: 12px;
+      text-align: left;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    li strong {
+      color: #0077b6;
+    }
+
+    .icon {
+      font-size: 1.3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🐟 SmartNavFish - Prediction Zones</h2>
+    <button onclick="getPredictions()">🎯 Get Predictions</button>
+    <ul id="predictionList"></ul>
+  </div>
+
+  <script>
+    async function getPredictions() {
+      const list = document.getElementById("predictionList");
+      list.innerHTML = "Loading...";
+
+      try {
+        const res = await fetch("http://localhost:5000/api/predict");
+        const data = await res.json();
+
+        if (!Array.isArray(data.predictions)) {
+          list.innerHTML = "No prediction data found.";
+          return;
+        }
+
+        list.innerHTML = "";
+        data.predictions.forEach((zone, index) => {
+          const item = document.createElement("li");
+          item.innerHTML = `
+            <div><strong>Zone ${index + 1}:</strong> ${zone.location}</div>
+            <div>🎯 Score: <strong>${zone.score}</strong></div>
+            <div>📈 Confidence: <strong>${zone.confidence}%</strong></div>
+          `;
+          list.appendChild(item);
+        });
+      } catch (err) {
+        console.error(err);
+        list.innerHTML = "Error fetching predictions.";
+      }
+    }
+  </script>
+</body>
+</html>

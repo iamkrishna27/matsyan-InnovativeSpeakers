@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🚨 Emergency SOS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff4e50, #f9d423);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+    }
+
+    .sos-container {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 30px 40px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #ff0033;
+      margin-bottom: 10px;
+    }
+
+    #coordinates {
+      margin: 15px 0;
+      font-weight: 500;
+      color: #444;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 15px;
+      margin-top: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
+      resize: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: #ff0033;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #cc002b;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sos-container">
+    <h2>🚨 EMERGENCY ALERT</h2>
+    <p>Your location is being shared with authorities</p>
+    <div id="coordinates">Lat/Lng: Loading...</div>
+    <textarea id="emergencyMsg" placeholder="Describe your emergency..."></textarea>
+    <button id="sendSOS">SEND DISTRESS SIGNAL</button>
+  </div>
+
+  <script>
+    document.getElementById('sendSOS').addEventListener('click', async () => {
+      const message = document.getElementById('emergencyMsg').value;
+      try {
+        const pos = await getLocation();
+        const lat = pos.coords.latitude.toFixed(4);
+        const lng = pos.coords.longitude.toFixed(4);
+        document.getElementById('coordinates').textContent = `Lat/Lng: ${lat}, ${lng}`;
+
+        // Replace with actual backend call
+        console.log('Sending:', { lat, lng, message });
+
+        alert('✅ Help is on the way!');
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    });
+
+    function getLocation() {
+      return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+    }
+
+    // Auto load coordinates on page load
+    getLocation().then(pos => {
+      const lat = pos.coords.latitude.toFixed(4);
+      const lng = pos.coords.longitude.toFixed(4);
+      document.getElementById('coordinates').textContent = `Lat/Lng: ${lat}, ${lng}`;
+    }).catch(() => {
+      document.getElementById('coordinates').textContent = "Lat/Lng: Unable to fetch";
+    });
+  </script>
+</body>
+</html>
