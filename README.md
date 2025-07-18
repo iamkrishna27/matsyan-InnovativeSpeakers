@@ -117,7 +117,7 @@ npm start
 
 ## 🎥 Demo Video  
 
-📺 [Watch on YouTube]([https://youtu.be/NG8_-_fMKC0])
+📺 [Watch on YouTube](https://youtu.be/NG8_-_fMKC0)
 
 ---
 
