@@ -47,7 +47,7 @@
 | Weather & Tide Info | OpenWeatherMap API |
 | Marine Mapping | Mapbox (Frontend) |
 | RESTful Routing | Express.js |
-| Authentication | ❌ Not required (Open Access) |
+| Authentication | Firebase |
 
 ---
 
