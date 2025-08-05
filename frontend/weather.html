@@ -5,134 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🌤️ SmartNavFish - Weather</title>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background: linear-gradient(to right, #74ebd5, #acb6e5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 30px 40px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      text-align: center;
-      animation: slideUp 0.8s ease;
-    }
-
-    h2 {
-      color: #004085;
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      margin-bottom: 15px;
-      outline: none;
-    }
-
-    button {
-      padding: 12px 20px;
-      font-size: 1rem;
-      border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    .weather-info {
-      margin-top: 25px;
-      font-size: 1.2rem;
-      color: #222;
-    }
-
-    .weather-icon {
-      font-size: 2.5rem;
-      animation: bounce 1s infinite alternate;
-    }
-
-    @keyframes bounce {
-      to { transform: translateY(-5px); }
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <link rel="stylesheet" href="./styles/style.css" />
 </head>
 <body>
-  <div class="container">
-    <h2>🌦️ Weather Forecast</h2>
-    <input type="text" id="latitudeInput" placeholder="Enter Latitude (e.g., 10.25)">
-    <input type="text" id="longitudeInput" placeholder="Enter Longitude (e.g., 76.45)">
-    <button onclick="getWeather()">Check Weather</button>
 
-    <div class="weather-info" id="weatherDisplay"></div>
-  </div>
+  <header class="navbar">
+    <div class="navbar-brand">
+      <img src="file.svg" style="width: 50px; height: 50px;">
+      <h1><a href="index.html">SmartNavFish</a></h1>
+    </div>
+    <nav class="navbar-nav">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="route.html" class="nav-item">Route Planner</a>
+      <a href="predict.html" class="nav-item">Prediction</a>
+      <a href="weather.html" class="nav-item active">Weather</a>
+      <a href="sos.html" class="nav-item nav-item--accent">SOS</a>
+    </nav>
+  </header>
 
-  <script>
-    async function getWeather() {
-      const lat = document.getElementById("latitudeInput").value;
-      const lon = document.getElementById("longitudeInput").value;
-      const weatherDisplay = document.getElementById("weatherDisplay");
+  <main class="main-content main-content--center">
+    <div class="card card--wide">
+      <h2 class="card-title"><i class="fas fa-cloud-sun"></i> Weather Forecast</h2>
+      <p class="card-subtitle">Get the latest weather conditions for your location.</p>
+      
+      <div class="weather-form">
+        <div class="form-group">
+          <label for="city-input">Enter City Name:</label>
+          <input type="text" id="city-input" placeholder="e.g., Kochi" />
+        </div>
+        <div class="button-group">
+          <button id="get-weather-btn" class="btn btn--primary">
+            <i class="fas fa-search"></i> Get Weather
+          </button>
+        </div>
+      </div>
+      
+      <div id="weather-result" class="weather-result-container">
+        <p>Enter a city to get the weather forecast.</p>
+      </div>
+    </div>
+  </main>
 
-      if (!lat || !lon) {
-        alert("Please enter both latitude and longitude.");
-        return;
-      }
-
-      const url = `http://localhost:5000/api/weather?lat=${lat}&lon=${lon}`;
-
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if (data.error) {
-          weatherDisplay.innerHTML = "⚠️ Error: " + data.error;
-          return;
-        }
-
-        const { location, temperature, humidity, condition, description, wind_speed } = data;
-
-        weatherDisplay.innerHTML = `
-          <div class="weather-icon">🌤️</div>
-          <strong>${location}</strong><br/>
-          🌡️ Temp: ${temperature}°C<br/>
-          💧 Humidity: ${humidity}%<br/>
-          💨 Wind: ${wind_speed} m/s<br/>
-          ☁️ Condition: ${description}
-        `;
-      } catch (err) {
-        console.error(err);
-        weatherDisplay.innerHTML = "⚠️ Error fetching weather data.";
-      }
-    }
-  </script>
+  <script src="./scripts/weather.js"></script>
 </body>
 </html>
